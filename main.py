@@ -6,10 +6,7 @@ from matplotlib import pyplot as plt
 from mlp_with_shortcut import Network
 
 if __name__ == '__main__':
-    data = pd.read_csv("data/car_data/car.data", sep=',', header=None)
-    le = preprocessing.LabelEncoder()
-    data = data.apply(le.fit_transform)
-    data = np.asarray(data)
+    data = pd.read_csv("data/car_data/car_evaluation.csv")
     data_x = data[:, 0:6]
     data_y = data[:, 6]
     n_samples = data.shape[0]
