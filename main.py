@@ -6,14 +6,14 @@ from matplotlib import pyplot as plt
 from mlp_with_shortcut import Network
 
 if __name__ == '__main__':
-    data = pd.read_csv("data/car_data/car_evaluation.csv")
+    data = np.array(pd.read_csv("data/car_data/car_evaluation.csv"))
     data_x = data[:, 0:6]
-    data_y = data[:, -4:]
+    data_y = data[:, -1:]
     n_samples = data.shape[0]
 
     dim_in = 6
-    dim_hidden1 = 100
-    dim_hidden2 = 150
+    dim_hidden_1 = 50
+    dim_hidden_2 = 100
     dim_out = 4
 
     learning_rate = 1e-2
@@ -28,9 +28,9 @@ if __name__ == '__main__':
     train_indx = perm[:n_train]
     test_indx = perm[n_train:]
 
-    data_x_train, dataY_train = data_x[train_indx, :], data_y[train_indx]
-    data_y_test, dataY_test = data_x[test_indx, :], data_y[test_indx]
+    data_x_train, data_y_train = data_x[train_indx, :], data_y[train_indx]
+    data_x_test, data_y_test = data_x[test_indx, :], data_y[test_indx]
 
-    model = Network(dim_in, dim_hidden1, dim_hidden2, dim_out, learning_rate, batch_size)
-    model.forward_pass(data_x[0])
+    model = Network(dim_in, dim_hidden_1, dim_hidden_2, dim_out, learning_rate, batch_size)
+    model.forward_pass(data_x_train[0])
     print(model.y_pred)

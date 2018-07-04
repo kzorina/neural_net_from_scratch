@@ -50,7 +50,7 @@ class Network:
         a_i - results of applying weights for the data from precious layear
         z_i - result of activation
 
-        We save the results for further backprop.
+        We save the results for further backward pass.
         :param x: input data
         :return: multiclass prediction
         '''
