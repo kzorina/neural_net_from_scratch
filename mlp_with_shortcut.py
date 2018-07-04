@@ -20,6 +20,7 @@ class Network:
         self.batch_size = batch_size
         self.learning_rate = learning_rate
 
+#TODO: test whether we really have Var == 1 for networks
     def xavier_init(self):
         # followed the next explanation of Xavier initialization
         # https://www.quora.com/What-is-an-intuitive-explanation-of-the-Xavier-Initialization-for-Deep-Neural-Networks
