@@ -1,6 +1,6 @@
 import numpy as np
 
-# TODO: chech whether this work properly
+# TODO: check whether this work properly
 class Relu:
     @staticmethod
     def activation(x):
