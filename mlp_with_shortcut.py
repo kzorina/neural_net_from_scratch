@@ -7,6 +7,7 @@ from sklearn.metrics import log_loss
 import tqdm
 from sklearn.preprocessing import OneHotEncoder
 
+
 class Network:
     """
     Constructs a feed-forward multilayer perceptron with two hidden layers and
@@ -108,28 +109,30 @@ class Network:
     def _delta_cross_entropy(self, y_true):
         delta = self.y_pred.copy()
         delta = delta - y_true
-        #delta /= len(y_true)
+        # delta /= len(y_true)
         return delta
 
-    # TODO: fix cross_entropy
+
+    # TODO: make the result of this method match sklearn
     def _cross_entropy_loss(self, y_true):
         '''
-        :param y_true: ground truth class labels (n_samples, 1)
+        :param y_true: ground truth class labels (n_samples, n_classes)
         :return: cross entropy loss
         '''
         m = y_true.shape[0]
         p = Softmax.activation(self.y_pred)
-        log_likelihood = -np.sum(np.log(p[y_true, :]))  # this gives something strange
+        log_likelihood = -np.sum(np.multiply(y_true,np.log(p.T)))  # this gives something strange
         loss = np.sum(log_likelihood) / m
         return loss
+
 
     def fit(self, x_train, y_train, x_test, y_test, n_epochs=500):
         """
         Train neural network.
         :param x_train: (n_features, n_samples)
-        :param y_train: (n_samples,1) (labels are not one hot encoded)
+        :param y_train: (n_samples, n_classes)
         :param x_test: test x data (n_features, n_samples)
-        :param y_test: test y data (n_samples,1)
+        :param y_test: test y data (n_samples, n_classes)
         :param n_epochs: number of epochs
         :return: train history dict
         """
@@ -151,7 +154,6 @@ class Network:
                                                                           train_history['accuracy'][-1]))
         return train_history
 
-    # TODO: make prediction one hot encoded
     def predict(self, x):
         """
         Predict class labels for the given input.
@@ -160,16 +162,15 @@ class Network:
         """
         self._forward_pass(x)
         predicted_classes = np.argmax(self.y_pred, axis=0)
-        #prediction = np.zeros((self.y_pred.shape[0], x.shape[1]))
-        #TODO: change hardcoded number of classes
-        onehot_encoder = OneHotEncoder(n_values = 4, sparse=False)
+        onehot_encoder = OneHotEncoder(n_values=self.dim_output, sparse=False)
         prediction = onehot_encoder.fit_transform(predicted_classes.reshape(len(predicted_classes), 1))
-        # prediction[]
-        #return np.expand_dims(np.argmax(self.y_pred, axis=0), axis=1)
         return prediction
 
 
 def get_accuracy(true_values, prediction):
-    #true_values == 1
-    #return np.sum(true_values == prediction) / len(true_values)
+    '''
+    :param true_values: one-hot encoded (n_samples, n_classes)
+    :param prediction: one-hot encoded (n_samples, n_classes)
+    :return: accuracy = number of samples with correct class prediction
+    '''
     return np.sum(np.multiply(true_values, prediction)) / len(true_values)
