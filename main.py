@@ -89,7 +89,7 @@ def custom_grid_search(dim_in, dim_out,
                             max_acc = test_acc
                             best_model_set = model_desc
                     plot_history_multiple(history, legend,
-                                 "histories/net with batch size {} and {} epochs. {} 1 hid, {} 2 hid.png".format(
+                                 "plots/history/net with batch size {} and {} epochs. {} 1 hid, {} 2 hid.png".format(
                                      batch_size, n_epochs, dim_hidden_1, dim_hidden_2))
 
     file = open(log_grid,"a")
@@ -131,7 +131,7 @@ def compare_activations(dim_in, dim_hidden_1, dim_hidden_2, dim_out,
 
 if __name__ == '__main__':
     np.random.seed(42)
-    data = np.array(pd.read_csv("data/car_data/car_evaluation_with_one_hot.csv"))
+    data = np.array(pd.read_csv("data/car_evaluation_with_one_hot.csv"))
     data_x = data[:, 0:6]
     data_y = data[:, -4:]
     n_samples = data.shape[0]
@@ -181,8 +181,8 @@ if __name__ == '__main__':
     if run_grid_search:
         # Search best parameters
         params = {
-                    'dim_hidden_1': np.arange(5, 100, 5),
-                    'dim_hidden_2': np.arange(10, 200, 10),
+                    'dim_hidden_1': np.arange(5, 10, 5),
+                    'dim_hidden_2': np.arange(10, 20, 10),
                     'n_epochs': np.arange(7, 16, 3),
                     'batch_size': np.arange(10, 21, 3),
                     'learning_rate': np.arange(0.001, 0.01, 0.002)
