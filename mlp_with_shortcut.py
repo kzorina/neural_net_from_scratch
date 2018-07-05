@@ -2,8 +2,6 @@ import numpy as np
 from activation_functions import Tanh, Relu, Softmax
 # TODO: test whether our activations work ok - compare with sklearn
 from sklearn.neural_network._base import softmax, relu, tanh
-# TODO: check whether out cross_entropy loss works correctly
-from sklearn.metrics import log_loss
 import tqdm
 from sklearn.preprocessing import OneHotEncoder
 
@@ -113,15 +111,13 @@ class Network:
         return delta
 
 
-    # TODO: make the result of this method match sklearn
     def _cross_entropy_loss(self, y_true):
         '''
         :param y_true: ground truth class labels (n_samples, n_classes)
         :return: cross entropy loss
         '''
         m = y_true.shape[0]
-        p = Softmax.activation(self.y_pred)
-        log_likelihood = -np.sum(np.multiply(y_true,np.log(p.T)))  # this gives something strange
+        log_likelihood = -np.sum(np.multiply(y_true,np.log(self.y_pred.T)))
         loss = np.sum(log_likelihood) / m
         return loss
 
@@ -134,24 +130,23 @@ class Network:
         :param x_test: test x data (n_features, n_samples)
         :param y_test: test y data (n_samples, n_classes)
         :param n_epochs: number of epochs
-        :return: train history dict
+        :return: train history dict with loss and test_accuracy
         """
-        train_history = {'loss': [], 'accuracy': []}
+        train_history = {'loss': [], 'test_accuracy': []}
         for epoch in tqdm.tqdm(range(n_epochs)):
 
             for i in range(x_train.shape[1] // self.batch_size):
                 start_idx = i * self.batch_size
                 end_idx = (i + 1) * self.batch_size
                 self._forward_pass(x_train[:, start_idx:end_idx])
-                # loss = self._cross_entropy_loss(y_train[start_idx:end_idx])
-                loss = log_loss(y_train[start_idx:end_idx], self.y_pred.T)
+                loss = self._cross_entropy_loss(y_train[start_idx:end_idx])
                 self._backward_pass(y_train[start_idx:end_idx])
 
             train_history['loss'].append(loss)
-            train_history['accuracy'].append(get_accuracy(y_test, self.predict(x_test)))
+            train_history['test_accuracy'].append(get_accuracy(y_test, self.predict(x_test)))
             if epoch % 20 == 0:
                 print("Epoch: {0} Loss: {1:.3f} Test acc: {2:.3f}".format(epoch, train_history['loss'][-1],
-                                                                          train_history['accuracy'][-1]))
+                                                                          train_history['test_accuracy'][-1]))
         return train_history
 
     def predict(self, x):

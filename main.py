@@ -6,6 +6,24 @@ import sklearn.metrics
 from mlp_with_shortcut import Network, get_accuracy
 
 
+def plot_history(history):
+    '''
+    :param history: model train history dict with loss and test_accuracy
+    '''
+    plt.figure(figsize=[12,12])
+    plt.subplot(211)
+    plt.plot(history['loss'])
+    plt.xlabel('epoch')
+    plt.ylabel('Log loss')
+    plt.title('Log loss')
+
+    plt.subplot(212)
+    plt.plot(history['test_accuracy'])
+    plt.xlabel('epoch')
+    plt.ylabel('Test accuracy')
+    plt.title('Test Accuracy')
+    plt.show()
+
 if __name__ == '__main__':
     data = np.array(pd.read_csv("data/car_data/car_evaluation_with_one_hot.csv"))
     data_x = data[:, 0:6]
@@ -19,7 +37,7 @@ if __name__ == '__main__':
     dim_out = 4
 
     learning_rate = 1e-4
-    n_epochs = 300
+    n_epochs = 600
     batch_size = 100
 
     n_train = int(n_samples * 0.7)
@@ -40,6 +58,7 @@ if __name__ == '__main__':
 
     model = Network(dim_in, dim_hidden_1, dim_hidden_2, dim_out, learning_rate, batch_size)
     history = model.fit(data_x_train, data_y_train, data_x_test, data_y_test, n_epochs)
+    plot_history(history)
 
     y_train_pred = model.predict(data_x_train)
     train_acc = get_accuracy(data_y_train, y_train_pred)
@@ -48,3 +67,4 @@ if __name__ == '__main__':
     y_test_pred = model.predict(data_x_test)
     test_acc = get_accuracy(data_y_test, y_test_pred)
     print("Test acc: {:3f}".format(test_acc))
+
