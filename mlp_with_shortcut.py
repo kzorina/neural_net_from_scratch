@@ -5,7 +5,7 @@ from sklearn.neural_network._base import softmax, relu, tanh
 # TODO: check whether out cross_entropy loss works correctly
 from sklearn.metrics import log_loss
 import tqdm
-
+from sklearn.preprocessing import OneHotEncoder
 
 class Network:
     """
@@ -87,14 +87,14 @@ class Network:
         :param y_true: ground truth labels of classes (n_classes,1)
         """
         self.y_true = y_true
-        delta_out = self._delta_cross_entropy(y_true)
-        delta_b_out = np.sum(delta_out, axis=1, keepdims=True)
+        delta_out = self._delta_cross_entropy(y_true.T)
+        delta_b_out = np.mean(delta_out, axis=1, keepdims=True)
 
         delta_2 = Relu.derivative(self.a_2) * self.w_out.T.dot(delta_out)
-        delta_b2 = np.sum(delta_2, axis=1, keepdims=True)
+        delta_b2 = np.mean(delta_2, axis=1, keepdims=True)
 
         delta_1 = Tanh.derivative(self.a_1) * self.w2.T.dot(delta_2)
-        delta_b1 = np.sum(delta_1, axis=1, keepdims=True)
+        delta_b1 = np.mean(delta_1, axis=1, keepdims=True)
 
         # update weights and biases
         self.w_out -= self.learning_rate * delta_out.dot(self.z_2_with_skip_connection.T)
@@ -107,8 +107,8 @@ class Network:
 
     def _delta_cross_entropy(self, y_true):
         delta = self.y_pred.copy()
-        delta[y_true, :] -= 1
-        delta /= len(y_true)
+        delta = delta - y_true
+        #delta /= len(y_true)
         return delta
 
     # TODO: fix cross_entropy
@@ -158,13 +158,18 @@ class Network:
         :param x: input data (n_features, n_samples)
         :return predicted labels (n_samples, n_classes)
         """
-        # self._forward_pass(x)
+        self._forward_pass(x)
         predicted_classes = np.argmax(self.y_pred, axis=0)
-        prediction = np.zeros((self.y_pred.shape[0], x.shape[1]))
+        #prediction = np.zeros((self.y_pred.shape[0], x.shape[1]))
+        #TODO: change hardcoded number of classes
+        onehot_encoder = OneHotEncoder(n_values = 4, sparse=False)
+        prediction = onehot_encoder.fit_transform(predicted_classes.reshape(len(predicted_classes), 1))
         # prediction[]
-        return np.expand_dims(np.argmax(self.y_pred, axis=0), axis=1)
+        #return np.expand_dims(np.argmax(self.y_pred, axis=0), axis=1)
+        return prediction
 
 
 def get_accuracy(true_values, prediction):
-    true_values == 1
-    return np.sum(true_values == prediction) / len(true_values)
+    #true_values == 1
+    #return np.sum(true_values == prediction) / len(true_values)
+    return np.sum(np.multiply(true_values, prediction)) / len(true_values)
