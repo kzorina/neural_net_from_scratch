@@ -1,5 +1,6 @@
 import numpy as np
 
+
 # TODO: check whether this work properly
 class Relu:
     @staticmethod
@@ -13,6 +14,7 @@ class Relu:
         x[x > 0] = 1
         return x
 
+
 class Tanh:
     @staticmethod
     def activation(x):
@@ -20,7 +22,8 @@ class Tanh:
 
     @staticmethod
     def derivative(x):
-        return 1 - Tanh.activation(x)**2
+        return 1 - Tanh.activation(x) ** 2
+
 
 # TODO: decide whether we need softmax derivative here
 class Softmax:
@@ -29,11 +32,6 @@ class Softmax:
         e_x = np.exp(x - np.max(x))
         return e_x / e_x.sum(axis=0)
 
-    # @staticmethod
-    # def derivative(z):
-    #     return Sigmoid.activation(z) * (1 - Sigmoid.activation(z))
-
-
-
-
-
+        # @staticmethod
+        # def derivative(z):
+        #     return Sigmoid.activation(z) * (1 - Sigmoid.activation(z))
