@@ -5,6 +5,7 @@ import sklearn.metrics
 
 from mlp_with_shortcut import Network, get_accuracy
 
+
 if __name__ == '__main__':
     data = np.array(pd.read_csv("data/car_data/car_evaluation_with_one_hot.csv"))
     data_x = data[:, 0:6]
