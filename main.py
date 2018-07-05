@@ -22,6 +22,7 @@ def plot_history(history):
     plt.xlabel('epoch')
     plt.ylabel('Test accuracy')
     plt.title('Test Accuracy')
+    plt.savefig('history.png')
     plt.show()
 
 if __name__ == '__main__':
@@ -37,8 +38,8 @@ if __name__ == '__main__':
     dim_out = 4
 
     learning_rate = 1e-4
-    n_epochs = 600
-    batch_size = 100
+    n_epochs = 800
+    batch_size = 200
 
     n_train = int(n_samples * 0.7)
     n_test = n_samples - n_train
