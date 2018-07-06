@@ -1,0 +1,37 @@
+Accuracy = 0.829 for model with this params:
+ 0.010 lr, batch size 10 and 15 epochs. 12 1 hid, 20 2 hid
+Accuracy = 0.829 for model with this params:
+ 0.010 lr, batch size 10 and 9 epochs. 12 1 hid, 12 2 hid
+Accuracy = 0.811 for model with this params:
+ 0.010 lr, batch size 10 and 15 epochs. 12 1 hid, 12 2 hid
+Accuracy = 0.805 for model with this params:
+ 0.010 lr, batch size 10 and 12 epochs. 12 1 hid, 20 2 hid
+Accuracy = 0.784 for model with this params:
+ 0.010 lr, batch size 10 and 15 epochs. 6 1 hid, 12 2 hid
+
+
+------------- NEW RUN -----------------
+Accuracy = 0.840 for model with this params:
+ 0.010 lr, batch size 16 and 12 epochs. 8 1 hid, 20 2 hid
+Accuracy = 0.813 for model with this params:
+ 0.010 lr, batch size 16 and 15 epochs. 12 1 hid, 20 2 hid
+Accuracy = 0.800 for model with this params:
+ 0.010 lr, batch size 16 and 12 epochs. 12 1 hid, 12 2 hid
+Accuracy = 0.794 for model with this params:
+ 0.010 lr, batch size 16 and 15 epochs. 12 1 hid, 12 2 hid
+Accuracy = 0.788 for model with this params:
+ 0.010 lr, batch size 16 and 15 epochs. 8 1 hid, 20 2 hid
+
+
+------------- NEW RUN -----------------
+Accuracy = 0.896 for model with this params:
+ 0.007 lr, batch size 16 and 13 epochs. 14 1 hid, 34 2 hid
+Accuracy = 0.881 for model with this params:
+ 0.007 lr, batch size 19 and 13 epochs. 10 1 hid, 34 2 hid
+Accuracy = 0.877 for model with this params:
+ 0.007 lr, batch size 10 and 13 epochs. 14 1 hid, 30 2 hid
+Accuracy = 0.877 for model with this params:
+ 0.009 lr, batch size 19 and 13 epochs. 12 1 hid, 22 2 hid
+Accuracy = 0.873 for model with this params:
+ 0.009 lr, batch size 19 and 13 epochs. 8 1 hid, 34 2 hid
+

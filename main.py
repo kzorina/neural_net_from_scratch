@@ -111,13 +111,16 @@ if __name__ == '__main__':
     n_samples = data.shape[0]
 
     dim_in = 6
-    dim_hidden_1 = 6
-    dim_hidden_2 = 14
+    dim_hidden_1 = 14
+    dim_hidden_2 = 34
     dim_out = 4
 
-    learning_rate = 0.009
-    n_epochs = 12
-    batch_size = 15
+    learning_rate = 0.007
+    n_epochs = 16
+    batch_size = 13
+
+    run_grid_search = False
+    compare_activation = False
 
     n_train = int(n_samples * 0.7)
     n_test = n_samples - n_train
@@ -135,35 +138,40 @@ if __name__ == '__main__':
     data_x_train = data_x_train.T
     data_x_test = data_x_test.T
 
-    # Search best parameters
-    params = {
-                'dim_hidden_1': [8,12],#np.arange(2, 20, 2),
-                'dim_hidden_2': [12,20],#np.arange(6, 40, 4),
-                'n_epochs': np.arange(9, 16, 3),
-                'batch_size': [16],#np.arange(10, 21, 3),
-                'learning_rate': [0.01]#np.arange(0.001, 0.01, 0.002)
-                }
-    max_acc, best_model_desc = custom_grid_search(dim_in, dim_out,
-                       data_x_train, data_y_train, data_x_test, data_y_test,
-                       "log_grid_search.txt", params, 5)
+    # Building a model
+    model = Network(dim_in, dim_hidden_1, dim_hidden_2, dim_out, learning_rate, batch_size)
+    model.fit(data_x_train, data_y_train, data_x_test, data_y_test, n_epochs, 'Softmax')
 
-    # Test for different activation functions
-    compare_activations(dim_in, dim_hidden_1, dim_hidden_2, dim_out,
-                        learning_rate, batch_size, n_epochs,
-                        data_x_train, data_y_train, data_x_test, data_y_test,
-                        "activations comparison.txt", 'Accuracy for Softmax vs Tanh activation with fixed seed.png')
-
-
-
-'''
-    y_train_pred = model.predict(data_x_train)
+    y_train_pred = model.predict(data_x_train, 'Softmax')
     train_acc = get_accuracy(data_y_train, y_train_pred)
     print("Train acc: {:3f}".format(train_acc))
 
-    y_test_pred = model.predict(data_x_test)
+    y_test_pred = model.predict(data_x_test, 'Softmax')
     test_acc = get_accuracy(data_y_test, y_test_pred)
     print("Test acc: {:3f}".format(test_acc))
-'''
+
+
+    if run_grid_search:
+        # Search best parameters
+        params = {
+                    'dim_hidden_1': np.arange(5, 100, 5),
+                    'dim_hidden_2': np.arange(10, 200, 10),
+                    'n_epochs': np.arange(7, 16, 3),
+                    'batch_size': np.arange(10, 21, 3),
+                    'learning_rate': np.arange(0.001, 0.01, 0.002)
+                    }
+        max_acc, best_model_desc = custom_grid_search(dim_in, dim_out,
+                           data_x_train, data_y_train, data_x_test, data_y_test,
+                           "log_grid_search.txt", params, 5)
+    if compare_activation:
+        # Test for different activation functions
+        compare_activations(dim_in, dim_hidden_1, dim_hidden_2, dim_out,
+                            learning_rate, batch_size, n_epochs,
+                            data_x_train, data_y_train, data_x_test, data_y_test,
+                            "activations comparison.txt", 'Accuracy for Softmax vs Tanh activation with fixed seed.png')
+
+
+
 # Some results (saved before log file appeared)
 '''
 
