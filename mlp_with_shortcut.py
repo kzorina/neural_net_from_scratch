@@ -46,7 +46,7 @@ class Network:
         self.b2 = np.zeros((self.dim_hidden_2, 1))
         self.b_out = np.zeros((self.dim_output, 1))
 
-    def _forward_pass(self, x):
+    def _forward_pass(self, x, third_layer_activation):
         '''
         Performs forward pass of the network.
 
@@ -55,6 +55,7 @@ class Network:
 
         We save the results for further backward pass.
         :param x: input data
+        :param third_layer_activation: which activation to apply to third layer
         :return: multi-class prediction (n_class, 1)
         '''
         self.x = x
@@ -66,7 +67,12 @@ class Network:
         self.z_2_with_skip_connection = self.z_2 + self.w_s.dot(x)
 
         self.a_3 = self.w_out.dot(self.z_2_with_skip_connection) + self.b_out
-        self.y_pred = Softmax.activation(self.a_3)
+        if third_layer_activation=='Softmax':
+            self.y_pred = Softmax.activation(self.a_3)
+        elif third_layer_activation=='Tanh':
+            self.y_pred = Tanh.activation(self.a_3)
+        else:
+            raise ValueError("Unknown activation type for 3rd layer")
         # self.y_pred.reshape((1,len(self.y_pred)))
         # self.y_pred = softmax(self.a_3)
 
@@ -122,7 +128,7 @@ class Network:
         return loss
 
 
-    def fit(self, x_train, y_train, x_test, y_test, n_epochs=500):
+    def fit(self, x_train, y_train, x_test, y_test, n_epochs=500, third_layer_activation = 'Softmax'):
         """
         Train neural network.
         :param x_train: (n_features, n_samples)
@@ -130,6 +136,7 @@ class Network:
         :param x_test: test x data (n_features, n_samples)
         :param y_test: test y data (n_samples, n_classes)
         :param n_epochs: number of epochs
+        :param third_layer_activation: which activation to apply to third layer
         :return: train history dict with loss and test_accuracy
         """
         train_history = {'loss': [], 'test_accuracy': []}
@@ -138,29 +145,33 @@ class Network:
             for i in range(x_train.shape[1] // self.batch_size):
                 start_idx = i * self.batch_size
                 end_idx = (i + 1) * self.batch_size
-                self._forward_pass(x_train[:, start_idx:end_idx])
+                self._forward_pass(x_train[:, start_idx:end_idx], third_layer_activation)
                 loss = self._cross_entropy_loss(y_train[start_idx:end_idx])
                 self._backward_pass(y_train[start_idx:end_idx])
 
             train_history['loss'].append(loss)
-            train_history['test_accuracy'].append(get_accuracy(y_test, self.predict(x_test)))
+            train_history['test_accuracy'].append(get_accuracy(y_test, self.predict(x_test, third_layer_activation)))
             if epoch % 20 == 0:
                 print("Epoch: {0} Loss: {1:.3f} Test acc: {2:.3f}".format(epoch, train_history['loss'][-1],
                                                                           train_history['test_accuracy'][-1]))
         return train_history
 
-    def predict(self, x):
+    def predict(self, x, third_layer_activation):
         """
         Predict class labels for the given input.
         :param x: input data (n_features, n_samples)
+        :param third_layer_activation: which activation to apply to third layer
         :return predicted labels (n_samples, n_classes)
         """
-        self._forward_pass(x)
+        self._forward_pass(x, third_layer_activation)
         predicted_classes = np.argmax(self.y_pred, axis=0)
         onehot_encoder = OneHotEncoder(n_values=self.dim_output, sparse=False)
         prediction = onehot_encoder.fit_transform(predicted_classes.reshape(len(predicted_classes), 1))
         return prediction
 
+    def score(self, X, y_true):
+        y_test_pred = self.predict(X, 'Softmax')
+        test_acc = get_accuracy(y_true, y_test_pred)
 
 def get_accuracy(true_values, prediction):
     '''
