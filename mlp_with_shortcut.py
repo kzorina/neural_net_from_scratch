@@ -22,11 +22,10 @@ class Network:
         self.dim_output = dim_output
         self.xavier_init()
 
-        # TODO: find out where to use batch size
         self.batch_size = batch_size
         self.learning_rate = learning_rate
 
-    # TODO: test whether we really have Var == 1 for networks
+
     def xavier_init(self):
         # followed the next explanation of Xavier initialization
         # https://www.quora.com/What-is-an-intuitive-explanation-of-the-Xavier-Initialization-for-Deep-Neural-Networks
@@ -41,7 +40,9 @@ class Network:
         self.w_out = np.random.randn(self.dim_output, self.dim_hidden_2) * np.sqrt(var_net_out)
         self.w_s = np.eye(self.dim_hidden_2, self.dim_input)
 
-        # TODO: clarify whether we can initialte biases with zeros
+        # It is possible and common to initialize the biases to be zero,
+        # since the asymmetry breaking is provided by the small random numbers in the weights.
+        # http://cs231n.github.io/neural-networks-2/
         self.b1 = np.zeros((self.dim_hidden_1, 1))
         self.b2 = np.zeros((self.dim_hidden_2, 1))
         self.b_out = np.zeros((self.dim_output, 1))
