@@ -25,7 +25,6 @@ class Network:
         self.batch_size = batch_size
         self.learning_rate = learning_rate
 
-
     def xavier_init(self):
         # followed the next explanation of Xavier initialization
         # https://www.quora.com/What-is-an-intuitive-explanation-of-the-Xavier-Initialization-for-Deep-Neural-Networks
@@ -68,14 +67,14 @@ class Network:
         self.z_2_with_skip_connection = self.z_2 + self.w_s.dot(x)
 
         self.a_3 = self.w_out.dot(self.z_2_with_skip_connection) + self.b_out
-        if third_layer_activation=='Softmax':
+        if third_layer_activation == 'Softmax':
             self.y_pred = Softmax.activation(self.a_3)
-        elif third_layer_activation=='Tanh':
+        elif third_layer_activation == 'Tanh':
             self.y_pred = Tanh.activation(self.a_3)
         else:
             raise ValueError("Unknown activation type for 3rd layer")
-        # self.y_pred.reshape((1,len(self.y_pred)))
-        # self.y_pred = softmax(self.a_3)
+            # self.y_pred.reshape((1,len(self.y_pred)))
+            # self.y_pred = softmax(self.a_3)
 
     def _backward_pass(self, y_true):
         """
@@ -117,19 +116,17 @@ class Network:
         # delta /= len(y_true)
         return delta
 
-
     def _cross_entropy_loss(self, y_true):
         '''
         :param y_true: ground truth class labels (n_samples, n_classes)
         :return: cross entropy loss
         '''
         m = y_true.shape[0]
-        log_likelihood = -np.sum(np.multiply(y_true,np.log(self.y_pred.T)))
+        log_likelihood = -np.sum(np.multiply(y_true, np.log(self.y_pred.T)))
         loss = np.sum(log_likelihood) / m
         return loss
 
-
-    def fit(self, x_train, y_train, x_test, y_test, n_epochs=500, third_layer_activation = 'Softmax'):
+    def fit(self, x_train, y_train, x_test, y_test, n_epochs=500, third_layer_activation='Softmax'):
         """
         Train neural network.
         :param x_train: (n_features, n_samples)
@@ -173,6 +170,7 @@ class Network:
     def score(self, X, y_true):
         y_test_pred = self.predict(X, 'Softmax')
         test_acc = get_accuracy(y_true, y_test_pred)
+
 
 def get_accuracy(true_values, prediction):
     '''

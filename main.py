@@ -116,7 +116,7 @@ if __name__ == '__main__':
     dim_out = 4
 
     learning_rate = 0.007
-    n_epochs = 16
+    n_epochs = 600
     batch_size = 13
 
     run_grid_search = False
