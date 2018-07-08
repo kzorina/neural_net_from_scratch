@@ -12,7 +12,7 @@ def plot_history_single(history, file_name):
     :param history: model train history dict with loss and test_accuracy
     :param file_name: name of file we save the figure in
     '''
-    plt.figure(figsize=[12,12])
+    plt.figure(figsize=[12, 12])
     plt.subplot(211)
 
     plt.plot(history['loss'])
@@ -26,7 +26,7 @@ def plot_history_single(history, file_name):
     plt.ylabel('Test accuracy')
     plt.title('Test Accuracy')
     plt.savefig(file_name)
-    #plt.show()
+    # plt.show()
 
 
 def plot_history_multiple(history, legend, file_name):
@@ -36,7 +36,7 @@ def plot_history_multiple(history, legend, file_name):
     :param legend: list of names of series passed for plotting
     :param file_name: name of file we save the figure in
     '''
-    plt.figure(figsize=[12,12])
+    plt.figure(figsize=[12, 12])
     plt.subplot(211)
 
     for hist in history:
@@ -54,13 +54,12 @@ def plot_history_multiple(history, legend, file_name):
     plt.title('Test Accuracy')
     plt.legend(legend, loc='upper left')
     plt.savefig(file_name)
-    #plt.show()
+    # plt.show()
 
 
 def custom_grid_search(dim_in, dim_out,
                        data_x_train, data_y_train, data_x_test, data_y_test,
                        log_grid, params, top_amount):
-
     best_model_set = ""
     max_acc = 0
     acc_list = []
@@ -78,21 +77,22 @@ def custom_grid_search(dim_in, dim_out,
                             model.fit(data_x_train, data_y_train, data_x_test, data_y_test, n_epochs, 'Softmax'))
                         y_test_pred = model.predict(data_x_test, 'Softmax')
                         test_acc = get_accuracy(data_y_test, y_test_pred)
-                        model_desc = "{0:.3f} lr, batch size {1} and {2} epochs. {3} 1 hid, {4} 2 hid".format(learning_rate,
-                                                                                                     batch_size,
-                                                                                                     n_epochs,
-                                                                                                     dim_hidden_1,
-                                                                                                     dim_hidden_2)
+                        model_desc = "{0:.3f} lr, batch size {1} and {2} epochs. {3} 1 hid, {4} 2 hid".format(
+                            learning_rate,
+                            batch_size,
+                            n_epochs,
+                            dim_hidden_1,
+                            dim_hidden_2)
                         acc_list.append(test_acc)
                         model_desc_list.append(model_desc)
                         if test_acc > max_acc:
                             max_acc = test_acc
                             best_model_set = model_desc
                     plot_history_multiple(history, legend,
-                                 "plots/history/net with batch size {} and {} epochs. {} 1 hid, {} 2 hid.png".format(
-                                     batch_size, n_epochs, dim_hidden_1, dim_hidden_2))
+                                          "plots/history/net with batch size {} and {} epochs. {} 1 hid, {} 2 hid.png".format(
+                                              batch_size, n_epochs, dim_hidden_1, dim_hidden_2))
 
-    file = open(log_grid,"a")
+    file = open(log_grid, "a")
     file.write("\n")
     file.write("------------- NEW RUN -----------------\n")
     ind_max = np.asarray(acc_list).argsort()[-top_amount:][::-1]
@@ -107,7 +107,7 @@ def compare_activations(dim_in, dim_hidden_1, dim_hidden_2, dim_out,
                         learning_rate, batch_size, n_epochs,
                         data_x_train, data_y_train, data_x_test, data_y_test,
                         output_file_path, plot_name):
-    file = open(output_file_path,"w+")
+    file = open(output_file_path, "w+")
     model = Network(dim_in, dim_hidden_1, dim_hidden_2, dim_out, learning_rate, batch_size)
     start = time.time()
     history_softmax = model.fit(data_x_train, data_y_train, data_x_test, data_y_test, n_epochs, 'Softmax')
@@ -181,23 +181,22 @@ if __name__ == '__main__':
     if run_grid_search:
         # Search best parameters
         params = {
-                    'dim_hidden_1': np.arange(5, 10, 5),
-                    'dim_hidden_2': np.arange(10, 20, 10),
-                    'n_epochs': np.arange(7, 16, 3),
-                    'batch_size': np.arange(10, 21, 3),
-                    'learning_rate': np.arange(0.001, 0.01, 0.002)
-                    }
+            'dim_hidden_1': np.arange(5, 10, 5),
+            'dim_hidden_2': np.arange(10, 20, 10),
+            'n_epochs': np.arange(7, 16, 3),
+            'batch_size': np.arange(10, 21, 3),
+            'learning_rate': np.arange(0.001, 0.01, 0.002)
+        }
         max_acc, best_model_desc = custom_grid_search(dim_in, dim_out,
-                           data_x_train, data_y_train, data_x_test, data_y_test,
-                           "log_files/log_grid_search.txt", params, 5)
+                                                      data_x_train, data_y_train, data_x_test, data_y_test,
+                                                      "log_files/log_grid_search.txt", params, 5)
     if compare_activation:
         # Test for different activation functions
         compare_activations(dim_in, dim_hidden_1, dim_hidden_2, dim_out,
                             learning_rate, batch_size, n_epochs,
                             data_x_train, data_y_train, data_x_test, data_y_test,
-                            "log_files/activations_comparison.txt", 'Accuracy for Softmax vs Tanh activation with fixed seed.png')
-
-
+                            "log_files/activations_comparison.txt",
+                            'Accuracy for Softmax vs Tanh activation with fixed seed.png')
 
 # Some results (saved before log file appeared)
 '''

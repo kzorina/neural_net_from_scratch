@@ -73,8 +73,6 @@ class Network:
             self.y_pred = Tanh.activation(self.a_3)
         else:
             raise ValueError("Unknown activation type for 3rd layer")
-            # self.y_pred.reshape((1,len(self.y_pred)))
-            # self.y_pred = softmax(self.a_3)
 
     def _backward_pass(self, y_true):
         """
