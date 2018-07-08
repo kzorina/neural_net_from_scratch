@@ -61,7 +61,7 @@ class Network:
         self.z_1 = Tanh.activation(self.a_1)
 
         self.a_2 = self.w2.dot(self.z_1) + self.b2
-        self.z_2 = Tanh.activation(self.a_2)
+        self.z_2 = Relu.activation(self.a_2)
         self.z_2_with_skip_connection = self.z_2 + self.w_s.dot(x)
 
         self.a_3 = self.w_out.dot(self.z_2_with_skip_connection) + self.b_out
