@@ -189,13 +189,13 @@ if __name__ == '__main__':
                     }
         max_acc, best_model_desc = custom_grid_search(dim_in, dim_out,
                            data_x_train, data_y_train, data_x_test, data_y_test,
-                           "log_grid_search.txt", params, 5)
+                           "log_files/log_grid_search.txt", params, 5)
     if compare_activation:
         # Test for different activation functions
         compare_activations(dim_in, dim_hidden_1, dim_hidden_2, dim_out,
                             learning_rate, batch_size, n_epochs,
                             data_x_train, data_y_train, data_x_test, data_y_test,
-                            "activations comparison.txt", 'Accuracy for Softmax vs Tanh activation with fixed seed.png')
+                            "log_files/activations_comparison.txt", 'Accuracy for Softmax vs Tanh activation with fixed seed.png')
 
 
 
