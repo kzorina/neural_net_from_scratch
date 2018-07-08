@@ -6,9 +6,35 @@ import time
 from mlp_with_shortcut import Network, get_accuracy
 
 
-def plot_history(history, legend, name):
+def plot_history_single(history, file_name):
     '''
+    Plotting history of model fitting for a single parameter set.
     :param history: model train history dict with loss and test_accuracy
+    :param file_name: name of file we save the figure in
+    '''
+    plt.figure(figsize=[12,12])
+    plt.subplot(211)
+
+    plt.plot(history['loss'])
+    plt.xlabel('epoch')
+    plt.ylabel('Log loss')
+    plt.title('Log loss')
+
+    plt.subplot(212)
+    plt.plot(history['test_accuracy'])
+    plt.xlabel('epoch')
+    plt.ylabel('Test accuracy')
+    plt.title('Test Accuracy')
+    plt.savefig(file_name)
+    #plt.show()
+
+
+def plot_history_multiple(history, legend, file_name):
+    '''
+    Plotting history for multiple parameter sets.
+    :param history: model train history dict with loss and test_accuracy
+    :param legend: list of names of series passed for plotting
+    :param file_name: name of file we save the figure in
     '''
     plt.figure(figsize=[12,12])
     plt.subplot(211)
@@ -27,7 +53,7 @@ def plot_history(history, legend, name):
     plt.ylabel('Test accuracy')
     plt.title('Test Accuracy')
     plt.legend(legend, loc='upper left')
-    plt.savefig(name)
+    plt.savefig(file_name)
     #plt.show()
 
 
@@ -62,7 +88,7 @@ def custom_grid_search(dim_in, dim_out,
                         if test_acc > max_acc:
                             max_acc = test_acc
                             best_model_set = model_desc
-                    plot_history(history, legend,
+                    plot_history_multiple(history, legend,
                                  "histories/net with batch size {} and {} epochs. {} 1 hid, {} 2 hid.png".format(
                                      batch_size, n_epochs, dim_hidden_1, dim_hidden_2))
 
@@ -111,13 +137,13 @@ if __name__ == '__main__':
     n_samples = data.shape[0]
 
     dim_in = 6
-    dim_hidden_1 = 14
-    dim_hidden_2 = 34
+    dim_hidden_1 = 50
+    dim_hidden_2 = 100
     dim_out = 4
 
-    learning_rate = 0.007
-    n_epochs = 600
-    batch_size = 13
+    learning_rate = 0.001
+    n_epochs = 200
+    batch_size = 20
 
     run_grid_search = False
     compare_activation = False
@@ -140,7 +166,7 @@ if __name__ == '__main__':
 
     # Building a model
     model = Network(dim_in, dim_hidden_1, dim_hidden_2, dim_out, learning_rate, batch_size)
-    model.fit(data_x_train, data_y_train, data_x_test, data_y_test, n_epochs, 'Softmax')
+    history = model.fit(data_x_train, data_y_train, data_x_test, data_y_test, n_epochs, 'Softmax')
 
     y_train_pred = model.predict(data_x_train, 'Softmax')
     train_acc = get_accuracy(data_y_train, y_train_pred)
@@ -150,6 +176,7 @@ if __name__ == '__main__':
     test_acc = get_accuracy(data_y_test, y_test_pred)
     print("Test acc: {:3f}".format(test_acc))
 
+    plot_history_single(history, 'plots/{0} epochs with batch size {1}.png'.format(n_epochs, batch_size))
 
     if run_grid_search:
         # Search best parameters
