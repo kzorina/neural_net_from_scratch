@@ -1,8 +1,6 @@
+import tqdm
 import numpy as np
 from activation_functions import Tanh, Relu, Softmax
-# TODO: test whether our activations work ok - compare with sklearn
-from sklearn.neural_network._base import softmax, relu, tanh
-import tqdm
 from sklearn.preprocessing import OneHotEncoder
 
 
@@ -111,7 +109,6 @@ class Network:
     def _delta_cross_entropy(self, y_true):
         delta = self.y_pred.copy()
         delta = delta - y_true
-        # delta /= len(y_true)
         return delta
 
     def _cross_entropy_loss(self, y_true):
@@ -164,11 +161,6 @@ class Network:
         onehot_encoder = OneHotEncoder(n_values=self.dim_output, sparse=False)
         prediction = onehot_encoder.fit_transform(predicted_classes.reshape(len(predicted_classes), 1))
         return prediction
-
-    def score(self, X, y_true):
-        y_test_pred = self.predict(X, 'Softmax')
-        test_acc = get_accuracy(y_true, y_test_pred)
-
 
 def get_accuracy(true_values, prediction):
     '''

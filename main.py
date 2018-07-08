@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
-import sklearn.metrics
 import time
 from mlp_with_shortcut import Network, get_accuracy
 
